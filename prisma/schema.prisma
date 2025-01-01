@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  email      String @unique
+  password   String
+  name       String @unique
+  avatarPath String @default("/uploads/default-avatar.png") @map("avatar_path")
+
+  card Card?
+}
+
+model Card {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  number        String            @unique @db.VarChar(16)
+  expireDate    String            @map("expire_date")
+  cvc           Int
+  paymentSystem EnumPaymentSystem @map("payment_system")
+  balance       Int               @default(0)
+
+  transactions Transaction[]
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique @map("user_id")
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  amount Int @default(0)
+
+  type EnumTransactionType
+
+  card   Card @relation(fields: [cardId], references: [id])
+  cardId Int  @map("card_id")
+}
+
+enum EnumPaymentSystem {
+  VISA
+  MAESTRO
+  MASTERCARD
+  MIR
+}
+
+enum EnumTransactionType {
+  TOP_UP
+  WITHDRAWAL
+}
