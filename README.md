@@ -4,7 +4,7 @@
 
 During the course only the frontend was developed. The backend was given initially.
 
-Frontend can be found [here](https://github.com/Inna-B10/bank-js-intensive)
+Frontend can be found here[Bank APP (client)](https://github.com/Inna-B10/Bank-APP-_client_)
 
 ---
 
